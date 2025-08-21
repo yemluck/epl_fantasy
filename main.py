@@ -132,10 +132,10 @@ game_week = 1
 result_options = ["w", "d", "l"]
 
 def update_result(result_dict):
+    print(f"Gameweek {game_week}:")
     for team in result_dict:
-        print(f"Gameweek {game_week}:")
         result_dict[team] = input(f"What was the result for {team}? (w/d/l): ").lower()
-        if result_dict[team] not in result_options:
+        while result_dict[team] not in result_options:
             print("Invalid result. Please try again.")
             result_dict[team] = input(f"What was the result for {team}? (w/d/l): ").lower()
     return result_dict
@@ -144,18 +144,25 @@ while game_week <=20:
     week_result = update_result(week_result)
     for player in player_list:
         print(player.options)
+
+
         player.pick = input(f"{player.name.title()}, make your pick for the week: ").title()
-        if player.pick in player.options:
-            if week_result[player.pick] == "w":
-                player.score += 3
-            elif week_result[player.pick] == "d":
-                player.score += 1
-            else:
-                player.score += 0
-            player.options.remove(player.pick)
-        else:
+        while player.pick not in player.options:
             print("Invalid team name. Please try again.")
             player.pick = input(f"{player.name.title()}, make your pick for the week: ").title()
+
+
+        if week_result[player.pick] == "w":
+            player.score += 3
+        elif week_result[player.pick] == "d":
+            player.score += 1
+        else:
+            player.score += 0
+
+
+        player.options.remove(player.pick)
+
+
 
     for player in player_list:
         table.add_row([player.name.title(), player.score])
@@ -163,6 +170,8 @@ while game_week <=20:
     game_week += 1
     print(table)
     print("\n" * 2)
+    table = PrettyTable()
+    table.field_names = ["Player", "Points"]
 
 
 
